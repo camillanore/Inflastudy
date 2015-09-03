@@ -41,3 +41,4 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
+.ipynb_checkpoints/*.ipynb
