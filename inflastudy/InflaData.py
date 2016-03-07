@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
-import numpy as np
 import math
-
+import matplotlib.pyplot as plt
 
 from inflastudy import decode_column_name
 from inflastudy import time_tools
@@ -55,7 +54,9 @@ class InflaData(object):
 
         # Create the column for relative predictions, and fill with NaN.
         cpi_pred_relative_col_names = []
-        for dq in range(1, prediction_horizon+1):
+        # TODO(Camilla): Hvis språkbruken er "ett kvartal frem" for første
+        # prediksjon i banen, bytt om til range(1, prediction_horizon+1).
+        for dq in range(0, prediction_horizon):
             col_name = 'PPR_dQ' + str(dq)
             cpi_pred_relative_col_names.append(col_name)
             ser = pd.Series(np.empty(slength), index=index)
@@ -75,10 +76,25 @@ class InflaData(object):
                 if not math.isnan(prediction):
                     # How old is the prediction, in quarters?
                     dq = time_tools.time_diff_in_quarters(ppr_date, date)
-                    n_col_name = cpi_pred_relative_col_names[dq-1]
+                    n_col_name = cpi_pred_relative_col_names[dq]
                     # Insert prediction, in the new dataframe.
                     self.cpi_pred_relative.loc[date, n_col_name] = (
                         self.cpi_predictions.loc[date, col_name])
                     #print 'Put prediction from ', col_name,
                     #      ' for ', date.strftime('%Y-%m-%d'),
                     #      ' in ', n_col_name
+
+    def plot_relative_time_cpi_data(self):
+        plt.figure('Predictions', figsize=(12,10))
+        plt.plot(self.raw_data.index,self.raw_data.CPI,label='Actual CPI')
+        plot_only_the_first_quarters = 6
+        for i, col_name in enumerate(self.cpi_pred_relative):
+            only_valid_data = np.isfinite(self.cpi_pred_relative[col_name])
+            plt.plot(self.cpi_pred_relative.index[only_valid_data],
+                 self.cpi_pred_relative.loc[only_valid_data,col_name],
+                 '-x', label=col_name)
+            if i > plot_only_the_first_quarters:
+                break  # Will stop the for loop.
+                
+        plt.legend()
+        plt.grid()

@@ -20,7 +20,8 @@ def year_quarter_to_datetime(year, quarter):
         ('11','1') -> 2011-01
     """
     quarter_int = int(quarter)           # Convert string to integer
-    month = quarter_int*3-2              # Get the first month in a quarter.
+    #TODO(Camilla): Check if Q1 should be jan or march?
+    month = quarter_int*3              # Get the first month in a quarter.
     month_str = format(month, '02d')     # Convert to string, with leading 0.
     date_str = ''.join(('20', year, '-', month_str))  # E.g. '2006-07'.
     timestamp = np.datetime64(date_str)  # Convert to a numpy datetime.

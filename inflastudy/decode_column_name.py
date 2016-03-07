@@ -25,8 +25,11 @@ def decode(column_name):
     """ Internal method for InflaData to get year, quarter and description
         from the column names in the input dataset.
     """
-    match = __ppr_name_regexp.match(column_name)
-    if not match:
+    ppr_pattern_found = __ppr_name_regexp.match(column_name)
+    if not ppr_pattern_found:
         return None
-    dictionary = match.groupdict()
+    # In the match object, the individual groups are given as a dict.
+    # Ref to the regexp defined above, we will get a dictionary with:
+    # {quarter=#, year=##, description='...'}
+    dictionary = ppr_pattern_found.groupdict()
     return dictionary
