@@ -35,12 +35,12 @@ def test_init():
 def test_init_with_data():
     """ Test loading data_file. """
     data = InflaData.InflaData(k_test_data)
-    print data
+    print(data)
     # Verify that the first line of data is read correctly.
     nose.tools.eq_(data.raw_data.index[0],
                    np.datetime64(k_first_t_in_data),
                    'First line date does not match')
-    print 'Successfully loaded test data: \n', data.raw_data
+    print('Successfully loaded test data: \n', data.raw_data)
 
 #@unit_disabled  # This hasn't been implemented yet.
 def test_cpi_data_conversion():
@@ -49,7 +49,8 @@ def test_cpi_data_conversion():
     expected_output = pd.DataFrame.from_csv(k_test_data_out, sep=';')
     # Call to create the output data.
     data.remap_to_relative_time(prediction_horizon=5)
-    print expected_output.to_string(na_rep='')
-    print data.cpi_pred_relative.to_string(na_rep='')
+    print(data.raw_data.to_string(na_rep=''))
+    print(expected_output.to_string(na_rep=''))
+    print(data.cpi_pred_relative.to_string(na_rep=''))
     assert_frame_equal(expected_output, data.cpi_pred_relative)
 
