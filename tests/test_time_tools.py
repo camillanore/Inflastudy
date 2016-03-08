@@ -12,13 +12,16 @@ from inflastudy import time_tools
 
 def test_year_quarter_to_datetime():
     """ Test year and quarter to datetime: """
-    test_data = [['2005-01', '05', '1'],
-                 ['2011-10', '11', '4'],
-                 ['2015-07', '15', '3']]
+    #             Date       Year   Q 
+    test_data = [['2005-03-31', '05', '1'],
+                 ['2011-12-31', '11', '4'],
+                 ['2015-09-30', '15', '3']]
     for [date_str, year, quarter] in test_data:
-        nose.tools.eq_(time_tools.year_quarter_to_datetime(year, quarter),
-                       np.datetime64(date_str),
-                       'Wrong datetime detected.')
+        from_time_tools = time_tools.year_quarter_to_datetime(year, quarter)
+        expected = np.datetime64(date_str)
+        nose.tools.eq_(from_time_tools, expected,
+                       'Wrong datetime detected: %s -> %s'%(
+                           str(from_time_tools), str(expected)))
 
 
 def test_time_diff_in_quarters():
