@@ -25,9 +25,14 @@ class NaivePredictions():
             self.data[col_name] = ser
             #TODO(Camilla): We are now ignoring the now-casting. We have to use
             # the previous actual value to now-cast the current value.
-            self.data[col_name] = [self.get_naive_value(cpi, dq)
-                                   for cpi in self.data.iloc[:,0]]
-            
+            for i, date in enumerate(self.data.index):
+                if i == 0: 
+                    self.data.loc[date,col_name] = np.NaN
+                    continue
+                last_known_cpi = self.data.iloc[i,0]
+                self.data.loc[date,col_name] = self.get_naive_value(
+                    last_known_cpi, dq+1)
+                                
             
     def get_naive_value(self, actual_value, delta_quarters, mode='linear'):
         """ Get one single prediction value into the future. """

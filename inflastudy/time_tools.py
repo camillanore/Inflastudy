@@ -24,7 +24,7 @@ def year_quarter_to_datetime(year, quarter):
     month = quarter_int*3+1              # Get the first month in a quarter.
     if month > 12:
         month = 1
-        year = str( int(year) + 1)
+        year = format( int(year) + 1, '02d')
     month_str = format(month, '02d')     # Convert to string, with leading 0.
     date_str = ''.join(('20', year, '-', month_str))  # E.g. '2006-07'.
     timestamp = np.datetime64(date_str)  # Convert to a numpy datetime.

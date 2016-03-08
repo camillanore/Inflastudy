@@ -85,7 +85,7 @@ class InflaData(object):
                     #      ' in ', n_col_name
 
     def plot_relative_time_cpi_data(self):
-        plt.figure('Predictions', figsize=(12,10))
+        plt.figure('Predictions')
         plt.plot(self.raw_data.index,self.raw_data.CPI,label='Actual CPI')
         plot_only_the_first_quarters = 6
         for i, col_name in enumerate(self.cpi_pred_relative):
