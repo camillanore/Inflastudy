@@ -43,11 +43,12 @@ class InflaData(object):
             jae_column_names.remove('CPI-jae')
         self.cpi_jae_predictions = self.raw_data.loc[:, jae_column_names]
     
-    def remap_to_relative_time(self, prediction_horizon=16):
+    def remap_to_relative_time(self, prediction_horizon=16, 
+                               colname_actual='CPI', PPR_code='cpi'):
         """ Convert the data to columns of how old the prediction is.
         """
         # Create a new empty DataFrame, and add the CPI column.
-        cpi_ser = self.raw_data.CPI
+        cpi_ser = self.raw_data[colname_actual]
         index = self.raw_data.index
         slength = len(index)
         self.cpi_pred_relative = pd.DataFrame(index=index, data=cpi_ser)
@@ -57,7 +58,7 @@ class InflaData(object):
         # TODO(Camilla): Hvis språkbruken er "ett kvartal frem" for første
         # prediksjon i banen, bytt om til range(1, prediction_horizon+1).
         for dq in range(0, prediction_horizon):
-            col_name = 'PPR_dQ' + str(dq)
+            col_name = 'CPI_dQ' + str(dq)
             cpi_pred_relative_col_names.append(col_name)
             ser = pd.Series(np.empty(slength), index=index)
             self.cpi_pred_relative[col_name] = ser
