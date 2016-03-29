@@ -36,7 +36,8 @@ class PredictionError():
         self.horizon_range = range(1,len(self.pred_error_sqmean.index)+1)
         #print('pred error std', self.pred_error_std)
     
-    def plot_selected(self, selected_quarters = [2,4,8,12], only_selected=True):
+    def plot_selected(self, selected_quarters = [2,4,8,12], only_selected=True,
+                      plot_title='Error data'):
         selected_colnames = ['dQ'+str(q) for q in selected_quarters]
         plt.figure()
         for i, col_name in enumerate(self.pred_error):
@@ -52,22 +53,22 @@ class PredictionError():
             plt.plot(self.pred_error.index[only_valid_data],
                      self.pred_error.loc[only_valid_data,col_name],
                      style, label=label)
-        plt.title('Error data')
+        plt.title(plot_title)
         plt.grid()
         plt.legend()
         
-    def plot_rms(self):        
+    def plot_rms(self, title_prefix = ''):        
         plt.figure()
-        plt.title('Root of mean square error')
+        plt.title(title_prefix + 'Root of mean square error')
         plt.errorbar(self.horizon_range,           # The x-axis
                      self.pred_error_rmse[:],   # The line
                      yerr=self.pred_error_std)     # The error bars
         plt.xlabel('Prediction horizon in quarters')
         plt.grid()
     
-    def plot_mean(self):
+    def plot_mean(self, title_prefix = ''):
         plt.figure()
-        plt.title('Mean of error')
+        plt.title(title_prefix + 'Mean of error')
         plt.errorbar(self.horizon_range,           # The x-axis
                      self.pred_error_mean[:],   # The line
                      yerr=self.pred_error_std)     # The error bars

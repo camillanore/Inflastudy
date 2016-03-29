@@ -27,6 +27,7 @@ def decode(column_name):
     """
     ppr_pattern_found = __ppr_name_regexp.match(column_name)
     if not ppr_pattern_found:
+        raise ValueError('Could not find ppr pattern in column name:' + column_name)
         return None
     # In the match object, the individual groups are given as a dict.
     # Ref to the regexp defined above, we will get a dictionary with:

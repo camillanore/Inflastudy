@@ -15,8 +15,19 @@ class InflaData(object):
         """ Load raw data from csv file. """
         self.raw_data = pd.DataFrame.from_csv(filename, sep=';')
         self.cpi_predictions = self.find_data(['cpi'])
-        self.cpi_jae_predictions = self.find_data(['jae','xe'], exclude_cols=['CPI-jae'])
-                
+        self.cpi_jae_predictions = self.find_data(['jae','xe'], 
+                                                  exclude_cols=['CPI-jae'])
+        self.gap_predictions = self.find_data(['gap'], 
+                                              exclude_cols=['Produksjonsgap']) 
+        
+    def calc_relative_data(self):    
+        self.cpi_pred_relative = self.remap_to_relative_time(self.cpi_predictions, 
+                                                             self.raw_data['CPI'])
+        self.jae_pred_relative = self.remap_to_relative_time(self.cpi_jae_predictions, 
+                                                             self.raw_data['CPI-jae'])
+        self.gap_pred_relative = self.remap_to_relative_time(self.gap_predictions, 
+                                                             self.raw_data['Produksjonsgap'])
+        
     def find_data(self, include_cols, exclude_cols=[]):
         col_names = []
         for col_name in self.raw_data.columns:
