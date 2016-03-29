@@ -58,7 +58,7 @@ class InflaData(object):
         # TODO(Camilla): Hvis språkbruken er "ett kvartal frem" for første
         # prediksjon i banen, bytt om til range(1, prediction_horizon+1).
         for dq in range(0, prediction_horizon):
-            col_name = 'CPI_dQ' + str(dq)
+            col_name = colname_actual + '_dQ' + str(dq)
             cpi_pred_relative_col_names.append(col_name)
             ser = pd.Series(np.empty(slength), index=index)
             self.cpi_pred_relative[col_name] = ser
