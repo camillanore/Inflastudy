@@ -22,7 +22,8 @@ def test_naive_trajectory():
 
     testdata = pd.DataFrame(cpi, index=dates)
     print(testdata)
-    naive = NaivePredictions(testdata, prediction_horizon=4, time_convergion_quarters=3)
+    naive = NaivePredictions.NaivePredictions(
+        testdata, prediction_horizon=4, time_convergion_quarters=3)
     print(naive.data)
     
 if __name__ == '__main__':

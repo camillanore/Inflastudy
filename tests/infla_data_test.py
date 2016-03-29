@@ -48,7 +48,10 @@ def test_cpi_data_conversion():
     data = InflaData.InflaData(k_test_data)
     expected_output = pd.DataFrame.from_csv(k_test_data_out, sep=';')
     # Call to create the output data.
-    data.remap_to_relative_time(prediction_horizon=5)
+    data.cpi_pred_relative = data.remap_to_relative_time(data.cpi_predictions, 
+                                                         data.raw_data['CPI'],
+                                                         prediction_horizon=5)
+    #data.remap_to_relative_time(prediction_horizon=5)
     print(data.raw_data.to_string(na_rep=''))
     print(expected_output.to_string(na_rep=''))
     print(data.cpi_pred_relative.to_string(na_rep=''))
