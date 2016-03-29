@@ -11,3 +11,12 @@ error in the CPI and CPI_JAE estimates.
 predictions and datasets.
 - *[inflastudy.ipynb](inflastudy.ipynb)*: The front-end of the repository. The iPython notebook 
 will present the data and plots.
+
+## Convert to csv
+
+- File --> Options
+	- change language to English (U.S)
+	- Advanced: Use system separators; set decimal separator to dot
+- Delete text and notes
+- Delete unnecessary data, with æ,ø,å
+- Save as csv (MS - DOS)
