@@ -9,46 +9,49 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class PredictionError():
-    def __init__(self, prediction_relative, col_name_actual='CPI'):
+    def __init__(self, prediction_relative, actual_data):
+        """ Create the prediction error object based on two data series:
+            prediction_relative containing the dq columns
+            actual_data containing the data to compare with as the first col.
+            
+            prediction = actual + prediction_error
+        """
         # Empty dataframe for error
-        self.cpi_pred_error = pd.DataFrame(index=prediction_relative.index)
+        self.pred_error = pd.DataFrame(index=prediction_relative.index)
         
         # Loop the cpi predictions
         for i, col_name in enumerate(prediction_relative.columns):
-            if 'CPI' in col_name:  # Skip the CPI column
-                continue
             err_name = col_name + '_err'
-            self.cpi_pred_error[err_name] = (
-                - prediction_relative[col_name] + prediction_relative.CPI)
+            self.pred_error[err_name] = (
+                prediction_relative[col_name] - actual_data)
         
         self._error_statistics()
                 
     def _error_statistics(self):
         # Find the mean, squaremean and std of the error.
-        self.pred_error_sqmean = self.cpi_pred_error.apply(np.square).apply(np.mean)
-        self.pred_error_mean = self.cpi_pred_error.apply(np.mean)
+        self.pred_error_sqmean = self.pred_error.apply(np.square).apply(np.mean)
+        self.pred_error_mean = self.pred_error.apply(np.mean)
         self.pred_error_rmse = np.sqrt(self.pred_error_sqmean)
-        self.pred_error_std = self.cpi_pred_error.apply(np.std)
+        self.pred_error_std = self.pred_error.apply(np.std)
         self.horizon_range = range(1,len(self.pred_error_sqmean.index)+1)
-        print('pred error std', self.pred_error_std)
+        #print('pred error std', self.pred_error_std)
     
-    def plot_selected(self, 
-                      selected_columns = ['PPR_dQ2_err', 'PPR_dQ4_err', 
-                                          'PPR_dQ8_err', 'PPR_dQ12_err',]):
-        plt.figure()        
-        selected_columns = ['PPR_dQ2_err', 'PPR_dQ4_err', 'PPR_dQ8_err', 'PPR_dQ12_err',]
-        for i, col_name in enumerate(self.cpi_pred_error):
-            only_valid_data = np.isfinite(self.cpi_pred_error[col_name])
-            if col_name in selected_columns:
+    def plot_selected(self, selected_quarters = [2,4,8,12], only_selected=True):
+        selected_colnames = ['dQ'+str(q) for q in selected_quarters]
+        plt.figure()
+        for i, col_name in enumerate(self.pred_error):
+            only_valid_data = np.isfinite(self.pred_error[col_name])
+            if any(q in col_name for q in selected_colnames):
                 style = '-'
                 label = col_name
-            else:
+            elif not only_selected:
                 style = '--'
                 label = None
-                continue #If we want to completely skip these.
-            plt.plot(self.cpi_pred_error.index[only_valid_data],
-                 self.cpi_pred_error.loc[only_valid_data,col_name],
-                 style, label=label)
+            else:
+                continue
+            plt.plot(self.pred_error.index[only_valid_data],
+                     self.pred_error.loc[only_valid_data,col_name],
+                     style, label=label)
         plt.title('Error data')
         plt.grid()
         plt.legend()
