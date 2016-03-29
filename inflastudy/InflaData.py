@@ -51,7 +51,7 @@ class InflaData(object):
         cpi_ser = self.raw_data[colname_actual]
         index = self.raw_data.index
         slength = len(index)
-        self.cpi_pred_relative = pd.DataFrame(index=index, data=cpi_ser)
+        self.cpi_pred_relative = pd.DataFrame(index=index, data=None)
 
         # Create the column for relative predictions, and fill with NaN.
         cpi_pred_relative_col_names = []
@@ -73,6 +73,8 @@ class InflaData(object):
                 col_info['year'], col_info['quarter'])
             # Loop through each prediction in this PPR.
             for date in self.cpi_predictions.index:
+                if date is pd.NaT:
+                    continue
                 prediction = self.cpi_predictions.loc[date, col_name]
                 if not math.isnan(prediction):
                     # How old is the prediction, in quarters?
