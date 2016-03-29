@@ -44,3 +44,6 @@ nosetests.xml
 .ipynb_checkpoints/*.ipynb
 ~$*.xlsx
 *~
+
+# Generated output
+output/*
