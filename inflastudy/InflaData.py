@@ -7,13 +7,15 @@ from inflastudy import decode_column_name
 from inflastudy import time_tools
 
 class InflaData(object):
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, decimal_point='.'):
         if filename:
-            self.load_data_file(filename)
+            self.load_data_file(filename, decimal_point)
 
-    def load_data_file(self, filename):
+    def load_data_file(self, filename, decimal_point='.'):
         """ Load raw data from csv file. """
-        self.raw_data = pd.DataFrame.from_csv(filename, sep=';')
+        # self.raw_data = pd.DataFrame.from_csv(filename, sep=';')
+        self.raw_data = pd.read_csv(filename, sep=';', index_col = 0, 
+                                    parse_dates = True, decimal=decimal_point)
         self.cpi_predictions = self.find_data(['cpi'])
         self.cpi_jae_predictions = self.find_data(['jae','xe'], 
                                                   exclude_cols=['CPI-jae'])
@@ -86,15 +88,15 @@ class InflaData(object):
 
     def plot_relative_time_cpi_data(self):
         plt.figure('Predictions')
-        plt.plot(self.raw_data.index,self.raw_data.CPI,label='Actual CPI')
+        
         plot_only_the_first_quarters = 6
         for i, col_name in enumerate(self.cpi_pred_relative):
             only_valid_data = np.isfinite(self.cpi_pred_relative[col_name])
             plt.plot(self.cpi_pred_relative.index[only_valid_data],
                  self.cpi_pred_relative.loc[only_valid_data,col_name],
-                 '-x', label=col_name)
+                 '-', alpha=0.5, label=col_name)
             if i > plot_only_the_first_quarters:
                 break  # Will stop the for loop.
-                
-        plt.legend()
+        plt.plot(self.raw_data.index,self.raw_data.CPI,label='Actual CPI')        
+        plt.legend(loc='best')
         plt.grid()
